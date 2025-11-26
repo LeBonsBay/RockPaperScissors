@@ -13,32 +13,20 @@ public class GameController implements Initializable {
     public Button paperButton;
     public Button rockButton;
 
-    public String getButton() {
-        return button;
-    }
-
-    public void setButton(String button) {
-        this.button = button;
-    }
-
-    public String button;
+    //we only want one object of gameLogic and not constantly create a new one
+    private GameLogic gameLogic = new GameLogic(null);
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    }
-
+    public void initialize(URL url, ResourceBundle resourceBundle) {}
 
     public void onClick(ActionEvent actionEvent) {
         Button buttonSource = (Button) actionEvent.getSource();
 
         String chosenButton = buttonSource.getText();
-        setButton(chosenButton);
 
-        GameLogic gameLogic = new GameLogic(getButton());
-
+        //setting the String to work in the GameLogic class
+        gameLogic.setFinalButton(chosenButton);
         gameLogic.gameStart();
-
 
     }
 }
