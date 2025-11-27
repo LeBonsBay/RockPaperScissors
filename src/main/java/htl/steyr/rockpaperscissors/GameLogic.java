@@ -1,18 +1,16 @@
 package htl.steyr.rockpaperscissors;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
-
-import java.awt.*;
-import java.net.URL;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 public class GameLogic {
 
-    public String finalButton;
-    private boolean turn;
+    public String button;
+    //private boolean turn;
     private String botGesture;
+
+    public GameLogic(String button) {
+        this.button = button;
+    }
 
     public int getPlayerHP() {
         return playerHP;
@@ -34,12 +32,12 @@ public class GameLogic {
     }
 
 
-    public String getFinalButton() {
-        return finalButton;
+    public String getButton() {
+        return button;
     }
 
-    public void setFinalButton(String finalButton) {
-        this.finalButton = finalButton;
+    public void setButton(String finalButton) {
+        this.button = finalButton;
     }
 
     public String getBotGesture() {
@@ -48,10 +46,6 @@ public class GameLogic {
 
     public void setBotGesture(String botGesture) {
         this.botGesture = botGesture;
-    }
-
-    public GameLogic(String finalButton) {
-        this.finalButton = finalButton;
     }
 
     public void gameStart() {
@@ -76,7 +70,7 @@ public class GameLogic {
         //@ToDo
         //setting hp in a textField
         String botGesture = getBotGesture();
-        String playerGesture = getFinalButton();
+        String playerGesture = getButton();
 
         switch (playerGesture) {
             case "Rock":
@@ -124,9 +118,6 @@ public class GameLogic {
                 }
                 break;
         }
-
-
     }
-
 
 }
