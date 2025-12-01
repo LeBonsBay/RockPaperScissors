@@ -1,18 +1,16 @@
 package htl.steyr.rockpaperscissors;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
-
-import java.awt.*;
-import java.net.URL;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 public class GameLogic {
 
-    public String finalButton;
-    private boolean turn;
+    public String button;
+    //private boolean turn;
     private String botGesture;
+
+    public GameLogic(String button) {
+        this.button = button;
+    }
 
     public int getPlayerHP() {
         return playerHP;
@@ -34,12 +32,12 @@ public class GameLogic {
     }
 
 
-    public String getFinalButton() {
-        return finalButton;
+    public String getButton() {
+        return button;
     }
 
-    public void setFinalButton(String finalButton) {
-        this.finalButton = finalButton;
+    public void setButton(String finalButton) {
+        this.button = finalButton;
     }
 
     public String getBotGesture() {
@@ -48,10 +46,6 @@ public class GameLogic {
 
     public void setBotGesture(String botGesture) {
         this.botGesture = botGesture;
-    }
-
-    public GameLogic(String finalButton) {
-        this.finalButton = finalButton;
     }
 
     public void gameStart() {
@@ -63,7 +57,7 @@ public class GameLogic {
     //action of the bot
     public void botLogic() {
         Random random = new Random();
-        String[] hands = {"Rock", "Paper", "Scissors"};
+        String[] hands = {"Rock", "Paper", "Scissors", "Well"};
         botGesture = hands[random.nextInt(0, hands.length)];
 
         setBotGesture(hands[random.nextInt(0, hands.length)]);
@@ -76,7 +70,7 @@ public class GameLogic {
         //@ToDo
         //setting hp in a textField
         String botGesture = getBotGesture();
-        String playerGesture = getFinalButton();
+        String playerGesture = getButton();
 
         switch (playerGesture) {
             case "Rock":
@@ -86,7 +80,7 @@ public class GameLogic {
                     setBotHP(getBotHP() - 1);
                     System.out.println(getBotHP() + "Bot");
                     //set in a textfield hp...
-                } else if (botGesture.equals("Paper")) {
+                } else if (botGesture.equals("Paper") || botGesture.equals("Well")) {
                     setPlayerHP(getPlayerHP() - 1);
                     System.out.println(getPlayerHP() + "Player");
                 } else {
@@ -101,10 +95,10 @@ public class GameLogic {
 
                     setPlayerHP(getPlayerHP() - 1);
                     System.out.println(getPlayerHP() + "Player");
-                } else if (botGesture.equals("Rock")) {
+                } else if (botGesture.equals("Rock") || botGesture.equals("Well")) {
                     setBotHP(getBotHP() - 1);
                     System.out.println(getBotHP() + "Bot");
-                } else {
+                } else if (botGesture.equals("Paper")) {
                     System.out.println("Draw!");
                 }
 
@@ -116,17 +110,27 @@ public class GameLogic {
 
                     setBotHP(getBotHP() - 1);
                     System.out.println(getBotHP() + "Bot");
-                } else if (botGesture.equals("Rock")) {
+                } else if (botGesture.equals("Rock") || botGesture.equals("Well")) {
                     setPlayerHP(getPlayerHP() - 1);
                     System.out.println(getPlayerHP() + "Player");
-                } else {
+                } else if (botGesture.equals("Scissors")) {
+                    System.out.println("Draw!");
+                }
+                break;
+            case "Well":
+
+                if (botGesture.equals("Rock") || botGesture.equals("Scissors")) {
+
+                    setBotHP(getBotHP() - 1);
+                    System.out.println(getBotHP() + "Bot");
+                } else if (botGesture.equals("Paper")) {
+                    setPlayerHP(getPlayerHP() - 1);
+                    System.out.println(getPlayerHP() + "Player");
+                } else if (botGesture.equals("Well")) {
                     System.out.println("Draw!");
                 }
                 break;
         }
-
-
     }
-
 
 }
