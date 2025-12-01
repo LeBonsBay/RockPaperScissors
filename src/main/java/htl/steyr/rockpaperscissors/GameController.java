@@ -30,7 +30,7 @@ public class GameController implements Initializable {
         String chosenButton = buttonSource.getText();
 
         //setting the String to work in the GameLogic class
-        gameLogic.setFinalButton(chosenButton);
+        gameLogic.setButton(chosenButton);
 
         cpuWaitTime(progressIndicator);
     }
