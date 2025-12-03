@@ -1,36 +1,40 @@
 package htl.steyr.rockpaperscissors;
 
+import javafx.scene.control.ListView;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameLogic {
 
-    public String button;
+    private String button;
     //private boolean turn;
     private String botGesture;
+    private int highScore = 0;
+    private ArrayList<Integer> arrayList = new ArrayList<Integer>();
 
-    public GameLogic(String button) {
+    public ListView<Integer> getView() {
+        return view;
+    }
+
+    public void setView(ListView<Integer> view) {
+        this.view = view;
+    }
+
+
+    private ListView<Integer> view;
+
+    public GameLogic(String button, ListView<Integer> view) {
         this.button = button;
+        this.view = view;
     }
 
-    public int getPlayerHP() {
-        return playerHP;
+    public int getHighScore() {
+        return highScore;
     }
 
-    public void setPlayerHP(int playerHP) {
-        this.playerHP = playerHP;
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
     }
-
-    private int playerHP = 3;
-    private int botHP = 3;
-
-    public int getBotHP() {
-        return botHP;
-    }
-
-    public void setBotHP(int botHP) {
-        this.botHP = botHP;
-    }
-
 
     public String getButton() {
         return button;
@@ -77,12 +81,17 @@ public class GameLogic {
 
                 if (botGesture.equals("Scissors")) {
 
-                    setBotHP(getBotHP() - 1);
-                    System.out.println(getBotHP() + "Bot");
-                    //set in a textfield hp...
+
+                    setHighScore(getHighScore() + 100);
+
+
+                    System.out.println("HighScore:" + getHighScore());
                 } else if (botGesture.equals("Paper") || botGesture.equals("Well")) {
-                    setPlayerHP(getPlayerHP() - 1);
-                    System.out.println(getPlayerHP() + "Player");
+                    //implement log
+                    arrayList.add(getHighScore());
+                    view.getItems().add(getHighScore());
+                    setHighScore(0);
+                    System.out.println("highscore reset:" + getHighScore());
                 } else {
                     System.out.println("Draw!");
                 }
@@ -93,11 +102,15 @@ public class GameLogic {
 
                 if (botGesture.equals("Scissors")) {
 
-                    setPlayerHP(getPlayerHP() - 1);
-                    System.out.println(getPlayerHP() + "Player");
+
+                    //implement log
+                    arrayList.add(getHighScore());
+                    view.getItems().add(getHighScore());
+                    setHighScore(0);
+                    System.out.println("highscore reset:" + getHighScore());
                 } else if (botGesture.equals("Rock") || botGesture.equals("Well")) {
-                    setBotHP(getBotHP() - 1);
-                    System.out.println(getBotHP() + "Bot");
+                    setHighScore(getHighScore() + 100);
+                    System.out.println("HighScore:" + getHighScore());
                 } else if (botGesture.equals("Paper")) {
                     System.out.println("Draw!");
                 }
@@ -107,12 +120,15 @@ public class GameLogic {
             case "Scissors":
 
                 if (botGesture.equals("Paper")) {
+                    setHighScore(getHighScore() + 100);
 
-                    setBotHP(getBotHP() - 1);
-                    System.out.println(getBotHP() + "Bot");
+                    System.out.println("HighScore:" + getHighScore());
                 } else if (botGesture.equals("Rock") || botGesture.equals("Well")) {
-                    setPlayerHP(getPlayerHP() - 1);
-                    System.out.println(getPlayerHP() + "Player");
+                    arrayList.add(getHighScore());
+                    view.getItems().add(getHighScore());
+
+                    setHighScore(0);
+                    System.out.println(getHighScore());
                 } else if (botGesture.equals("Scissors")) {
                     System.out.println("Draw!");
                 }
@@ -121,11 +137,13 @@ public class GameLogic {
 
                 if (botGesture.equals("Rock") || botGesture.equals("Scissors")) {
 
-                    setBotHP(getBotHP() - 1);
-                    System.out.println(getBotHP() + "Bot");
+                    setHighScore(getHighScore() + 100);
+                    System.out.println("HighScore:" + getHighScore());
                 } else if (botGesture.equals("Paper")) {
-                    setPlayerHP(getPlayerHP() - 1);
-                    System.out.println(getPlayerHP() + "Player");
+                    arrayList.add(getHighScore());
+                    view.getItems().add(getHighScore());
+                    setHighScore(0);
+                    System.out.println(getHighScore());
                 } else if (botGesture.equals("Well")) {
                     System.out.println("Draw!");
                 }

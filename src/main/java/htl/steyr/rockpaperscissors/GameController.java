@@ -1,5 +1,6 @@
 package htl.steyr.rockpaperscissors;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -8,9 +9,11 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import javafx.scene.control.ListView;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GameController implements Initializable {
@@ -20,9 +23,11 @@ public class GameController implements Initializable {
     public Button rockButton;
     public Button wellButton;
     public ProgressBar progressIndicator;
+    public ListView<Integer> highScoreListView;
+
 
     //we only want one object of gameLogic and not constantly create a new one
-    private GameLogic gameLogic = new GameLogic(null);
+    private GameLogic gameLogic = new GameLogic(null,null);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -35,6 +40,7 @@ public class GameController implements Initializable {
         //implement button for stopping music and implement infinite-loop (as long as the program runs)
         //sometimes the music stops while playing, idk yet why
         //Note: TinySound library seems to be good
+
 
 
         String mp3File = "./src/main/resources/mp3/bgMusic.mp3";
@@ -58,6 +64,7 @@ public class GameController implements Initializable {
 
         //setting the String to work in the GameLogic class
         gameLogic.setButton(chosenButton);
+        gameLogic.setView(highScoreListView);
 
         cpuWaitTime(progressIndicator);
     }
@@ -85,7 +92,10 @@ public class GameController implements Initializable {
                 }
 
                 // After the waiting animation finishes, start the game logic
-                gameLogic.gameStart();
+
+                Platform.runLater(() ->{
+                    gameLogic.gameStart();
+                });
                 return null;
             }
         };
