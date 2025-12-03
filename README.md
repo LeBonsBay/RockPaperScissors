@@ -21,11 +21,11 @@ A simple Rock-Paper-Scissors Game made with JavaFX. This project serves as a pra
 
 
 
-# :blush: Authors 
+## :blush: Authors 
 - <a href="https://github.com/LeBonsBay">@LeBonsBay</a>
 - <a href="https://github.com/dlehner1">@dlehner1</a>
 
----
-# :rocket: Tech Stack 
+
+## :rocket: Tech Stack 
 - Java
 - JavaFX
