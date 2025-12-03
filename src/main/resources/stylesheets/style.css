@@ -5,4 +5,28 @@
 change background later
 -fx-background-image: url("../images/background.jpg");
  */
+
+    -fx-background-color: transparent;
 }
+
+
+.image-view {
+    -fx-background-color: purple;
+}
+
+.button {
+    -fx-background-color: transparent;
+}
+
+.button:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-color: transparent;
+
+    -fx-border-color: black;
+    -fx-border-width: 3;
+    -fx-border-radius: 3;
+}
+
+
+
