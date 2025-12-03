@@ -1,10 +1,10 @@
 # RockPaperScissors
 
----
+
 A simple Rock-Paper-Scissors Game made with JavaFX. This project serves as a practice project to better get into VSC with Git and GitHub
 
 
----
+
 ## :smiley: Features 
 
 - Bot that plays against the player
@@ -19,11 +19,11 @@ A simple Rock-Paper-Scissors Game made with JavaFX. This project serves as a pra
 >[!NOTE]
 > For copyright reasons the background music and onClick sound have to be added manually by the user
 
----
+
 
 # :blush: Authors 
-- @LeBonsBay
-- @dlehner1
+- <a href="https://github.com/LeBonsBay">@LeBonsBay</a>
+- <a href="https://github.com/dlehner1">@dlehner1</a>
 
 ---
 # :rocket: Tech Stack 
