@@ -6,10 +6,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import javafx.scene.control.ListView;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
@@ -24,43 +26,64 @@ public class GameController implements Initializable {
     public Button wellButton;
     public ProgressBar progressIndicator;
     public ListView<Integer> highScoreListView;
+    public Slider volumeSlider;
+    private MediaPlayer mediaPlayer;
+    private Media clickSound;
+    private Media bgMusic;
 
 
     //we only want one object of gameLogic and not constantly create a new one
-    private GameLogic gameLogic = new GameLogic(null,null);
+    private GameLogic gameLogic = new GameLogic(null, null);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         backGroundMusic();
     }
 
+    //setting bg music with slider
     public void backGroundMusic() {
-        //@ToDo
-        //implement button for stopping music and implement infinite-loop (as long as the program runs)
-        //sometimes the music stops while playing, idk yet why
-        //Note: TinySound library seems to be good
 
+        String file = "bgMusic.mp3";
+        String mp3File = "./src/main/resources/mp3/" + file;
 
+        bgMusic = new Media(new File(mp3File).toURI().toString());
 
-        String mp3File = "./src/main/resources/mp3/bgMusic.mp3";
-        Media bgMusic = new Media(new File(mp3File).toURI().toString());
-
-        MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
+        mediaPlayer = new MediaPlayer(bgMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
-        mediaPlayer.setVolume(0.1);
+        volumeSlider.setMin(0.0);
+        volumeSlider.setMax(1.0);
+
+        // listener for volumeSlider
+        mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty());
 
         mediaPlayer.play();
+    }
 
+    //onClick Sound for the buttons
+    public void clickSound() {
+
+        String file = "click.mp3";
+        String soundFile = "./src/main/resources/mp3/" + file;
+
+        clickSound = new Media(new File(soundFile).toURI().toString());
+
+
+        mediaPlayer = new MediaPlayer(clickSound);
+
+        mediaPlayer.setVolume(0.5);
+
+        mediaPlayer.play();
 
     }
 
 
     public void onClick(ActionEvent actionEvent) {
+        clickSound();
+
         Button buttonSource = (Button) actionEvent.getSource();
 
-        String chosenButton = buttonSource.getText();
+        String chosenButton = buttonSource.getId();
 
         //setting the String to work in the GameLogic class
         gameLogic.setButton(chosenButton);
@@ -93,7 +116,7 @@ public class GameController implements Initializable {
 
                 // After the waiting animation finishes, start the game logic
 
-                Platform.runLater(() ->{
+                Platform.runLater(() -> {
                     gameLogic.gameStart();
                 });
                 return null;
@@ -112,4 +135,5 @@ public class GameController implements Initializable {
         thread.setDaemon(true); // Will not block application shutdown
         thread.start();         // Start the waiting animation + game start
     }
+
 }
