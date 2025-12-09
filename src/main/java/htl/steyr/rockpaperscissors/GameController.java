@@ -1,5 +1,6 @@
 package htl.steyr.rockpaperscissors;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.animation.Interpolator;
@@ -10,10 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Slider;
 
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +25,8 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import javafx.scene.control.ListView;
+import javafx.util.Duration;
+
 
 import javax.swing.text.StyleConstants;
 import javax.swing.text.html.StyleSheet;
@@ -29,9 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,10 +48,11 @@ public class GameController implements Initializable {
     public Button scissorsButton;
     public Button paperButton;
     public Button rockButton;
+    public Button wellButton;
     public Button midButton;
     public ImageView botDisplayView;
 
-    private final Image[] imgs = new Image[3];
+    private final Image[] imgs = new Image[4];
 
     private String handSign;
 
@@ -64,7 +69,7 @@ public class GameController implements Initializable {
 
 
     //we only want one object of gameLogic and not constantly create a new one
-    private GameLogic gameLogic = new GameLogic(null, null);
+    private GameLogic gameLogic = new GameLogic(null,null);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,11 +81,13 @@ public class GameController implements Initializable {
             imgs[0] = new Image(getClass().getResourceAsStream("/images/rock.png"));
             imgs[1] = new Image(getClass().getResourceAsStream("/images/paper.png"));
             imgs[2] = new Image(getClass().getResourceAsStream("/images/scissors.png"));
+            imgs[3] = new Image(getClass().getResourceAsStream("/images/well.jpg"));
+            //imgs[3] = new Image(getClass().getResourceAsStream("/images/well.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
         //music at start of the program
-        backGroundMusic();
+        //backGroundMusic();
     }
 
     public void backGroundMusic(){
@@ -96,6 +103,10 @@ public class GameController implements Initializable {
         bgMusic = new Media(new File(mp3File).toURI().toString());
 
         mediaPlayer = new MediaPlayer(bgMusic);
+        String mp3File = "./src/main/resources/mp3/bgMusic.mp3";
+        Media bgMusic = new Media(new File(mp3File).toURI().toString());
+
+        MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         volumeSlider.setMin(0.0);
@@ -120,6 +131,7 @@ public class GameController implements Initializable {
 
         mediaPlayer.setVolume(0.5);
 
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
 
     }
@@ -130,20 +142,17 @@ public class GameController implements Initializable {
 
         Button buttonSource = (Button) actionEvent.getSource();
         String chosenButton = buttonSource.getId();
-        transition(chosenButton); // animation for moving the button to the middle
+        transition(chosenButton);
+        cpuWaitTime(progressIndicator);
         for (int i = 0; i < (root.getChildren().size()); i++) {
-            if (!root.getChildren().get(i).getId().equals(chosenButton) && !root.getChildren().get(i).getId().equals(botDisplayView.getId())) {
-                root.getChildren().get(i).setOnMouseClicked(null);
+            if (!root.getChildren().get(i).getId().equals(chosenButton) && !root.getChildren().get(i).getId().equals(highScoreListView.getId())) {
                 root.getChildren().get(i).setVisible(false);
             }
         }
+        buttonSource.setMouseTransparent(true);
+        progressIndicator.setVisible(true);
+        botDisplayView.setVisible(true);
         buttonSource.setOnMouseClicked(null);
-        String botGesture = gameLogic.getBotGesture();
-        int botChoice = gameLogic.getBotChoice();
-        rollingImages(botChoice);
-        System.out.println(botGesture);
-        System.out.println(gameLogic.getBotGesture());
-
 
         String chosenButton = buttonSource.getId();
         // {"Rock", "Paper", "Scissors"} are the values
@@ -153,7 +162,12 @@ public class GameController implements Initializable {
         gameLogic.setButton(chosenButton);
         gameLogic.setView(highScoreListView);
 
-        cpuWaitTime(progressIndicator);
+        rollingImages(gameLogic.getBotChoice());
+        System.out.println(gameLogic.getBotChoice());
+
+        //setting the String to work in the GameLogic class
+
+        resetLater(3);
     }
 
     public void cpuWaitTime(ProgressBar progressIndicator) {
@@ -174,10 +188,9 @@ public class GameController implements Initializable {
 
                     // Update the progress value (i goes from 0 → 99)
                     updateProgress(i + 1, N_ITERATIONS);
-                    // sleep is used to simulate doing some work which takes some time....
+                    // sleep is used to simulate doings some work which takes some time....
                     Thread.sleep(10);
                 }
-
                 // After the waiting animation finishes, start the game logic
 
                 Platform.runLater(() -> {
@@ -186,7 +199,6 @@ public class GameController implements Initializable {
                 return null;
             }
         };
-
 
         // Bind the progress bar to the task's progress
         // (progress bar updates automatically)
@@ -198,6 +210,7 @@ public class GameController implements Initializable {
         thread.setDaemon(true); // Will not block application shutdown
         thread.start();         // Start the waiting animation + game start
     }
+
 
     public void transition(String button) {
         TranslateTransition tt = new TranslateTransition();
@@ -212,8 +225,8 @@ public class GameController implements Initializable {
         }
         double x = root.getChildren().get(id).getLayoutX();
         double y = root.getChildren().get(id).getLayoutY();
-        double deltaX = root.getChildren().get(4).getLayoutX() - x;
-        double deltaY = root.getChildren().get(4).getLayoutY() - y;
+        double deltaX = root.getChildren().get(5).getLayoutX() - x;
+        double deltaY = root.getChildren().get(5).getLayoutY() - y;
 
         tt.setToX(deltaX);
         tt.setToY(deltaY);
@@ -221,44 +234,94 @@ public class GameController implements Initializable {
         tt.play();
     }
 
-    public void rollingImages(int botDesition) {
+    public void rollingImages(int botDecision) {
 
-        ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-        final int[] delay = {0};
-        final int maxDelay = 70;
+        final long ONE_SECOND = 1_000_000_000L; // 1 second in nanoseconds
 
-        Runnable task = new Runnable() {
+        final long[] startTime = { -1 };
+        final long[] lastFrame = { 0 };
+
+        // SPEED PARAMETERS
+        long startDelay = 20_000_000L;   // 20ms → very fast
+        long endDelay   = 250_000_000L;  // 250ms → slow at the end
+
+        final double slowdownSteps = 1.0 / imgs.length * 12.0;
+        final double[] progress = {0};
+
+        final long[] currentDelay = { startDelay };
+
+        final int[] currentIndex = {0};
+
+        AnimationTimer timer = new AnimationTimer() {
+
             @Override
-            public void run() {
+            public void handle(long now) {
 
-                // update UI on FX thread
-                Platform.runLater(() -> {
-                    int rand = (int) (Math.random() * GameController.this.imgs.length);
-                    botDisplayView.setImage(GameController.this.imgs[rand]);
-                });
+                // initialize timing
+                if (startTime[0] < 0) {
+                    startTime[0] = now;
+                    lastFrame[0] = now;
+                    return;
+                }
 
+                long elapsed = now - startTime[0];
 
-                // slow down gradually
-                delay[0] += 2; // increase delay → slower
+                // If 1 second finished → SET FINAL IMAGE + STOP
+                if (elapsed >= ONE_SECOND) {
+                    botDisplayView.setImage(imgs[botDecision]);
+                    this.stop();
+                    return;
+                }
 
-                // if delay too large, stop
-                if (delay[0] > maxDelay) {
-                    exec.shutdown();
+                // Only change image if current delay passed
+                if (now - lastFrame[0] >= currentDelay[0]) {
 
-                    // final face
-                    Platform.runLater(() -> {
-                        botDisplayView.setImage(imgs[botDesition]);
-                        System.out.println(botDesition);
-                    });
-                } else {
-                    // reschedule with new slower delay
-                    exec.schedule(this, delay[0], TimeUnit.MILLISECONDS);
+                    // cycle through images
+                    currentIndex[0] = (currentIndex[0] + 1) % imgs.length;
+                    botDisplayView.setImage(imgs[currentIndex[0]]);
+
+                    lastFrame[0] = now;
+
+                    // Compute progress from 0 → 1 (0% → 100% of animation time)
+                    progress[0] = Math.min(1.0, (double) elapsed / ONE_SECOND);
+
+                    // Ease-out slowdown curve (fast → slow)
+                    double eased = 1.0 - Math.pow(1.0 - progress[0], 3); // smooth cubic
+
+                    // Interpolate delay between fast and slow
+                    currentDelay[0] = (long) (startDelay + (endDelay - startDelay) * eased);
                 }
             }
         };
 
-        // start immediately
-        exec.schedule(task, 0, TimeUnit.MILLISECONDS);
+        timer.start();
+        System.out.println( "##" + botDecision);
+    }
+
+    public void reset(){
+        for(Node node : originalPositions.keySet()){
+            Point2D point = originalPositions.get(node);
+
+            node.setLayoutX(point.getX());
+            node.setLayoutY(point.getY());
+            node.setTranslateX(0);
+            node.setTranslateY(0);
+        }
+
+        for (int i = 0; i < root.getChildren().size(); i++) {
+            if (!root.getChildren().get(i).getId().equals(highScoreListView.getId())) {
+                root.getChildren().get(i).setVisible(true);
+                root.getChildren().get(i).setMouseTransparent(false);
+            }
+        }
+        progressIndicator.setVisible(false);
+        botDisplayView.setVisible(false);
+    }
+
+    public void resetLater(double seconds){
+        PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
+        pause.setOnFinished(event -> reset());
+        pause.play();
     }
 
 }

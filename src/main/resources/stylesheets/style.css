@@ -28,5 +28,17 @@ change background later
     -fx-border-radius: 3;
 }
 
+.progress-bar {
+    -fx-border-radius: 0 0 18 18;
+}
+
+
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to right, black, blue);
+    -fx-progress-color: black;
+    -fx-background-insets: 0;
+    -fx-background-radius: 5;
+}
+
 
 
