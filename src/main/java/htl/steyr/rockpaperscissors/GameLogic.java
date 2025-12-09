@@ -84,7 +84,6 @@ public class GameLogic {
 
                     setHighScore(getHighScore() + 100);
 
-
                     System.out.println("HighScore:" + getHighScore());
                 } else if (botGesture.equals("Paper") || botGesture.equals("Well")) {
                     //implement log
@@ -150,5 +149,4 @@ public class GameLogic {
                 break;
         }
     }
-
 }
