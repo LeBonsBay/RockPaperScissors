@@ -40,5 +40,15 @@ change background later
     -fx-background-radius: 5;
 }
 
+.slider .track {
+    -fx-background-color: linear-gradient(to bottom, black, white);
+}
+
+.slider:focused .thumb{
+    -fx-border-color: black;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+}
+
 
 

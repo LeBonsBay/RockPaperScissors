@@ -8,7 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="891.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="htl.steyr.rockpaperscissors.GameController">
+<AnchorPane id="AnchorPane" fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="899.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="htl.steyr.rockpaperscissors.GameController">
    <children>
       <ImageView fx:id="botDisplayView" fitHeight="184.0" fitWidth="204.0" layoutX="296.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
       <Button id="Rock" fx:id="rockButton" layoutX="398.0" layoutY="121.0" mnemonicParsing="false" onAction="#onClick" prefHeight="184.0" prefWidth="204.0">
@@ -35,7 +35,7 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <Button fx:id="wellButton" layoutX="602.0" layoutY="121.0" mnemonicParsing="false" onAction="#onClick" prefHeight="184.0" prefWidth="194.0">
+      <Button id="Well" fx:id="wellButton" layoutX="602.0" layoutY="121.0" mnemonicParsing="false" onAction="#onClick" prefHeight="184.0" prefWidth="194.0">
          <graphic>
             <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -44,9 +44,9 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button fx:id="midButton" layoutX="280.0" layoutY="279.0" mnemonicParsing="false" onAction="#onClick" />
+      <Button fx:id="midButton" layoutX="296.0" layoutY="279.0" mnemonicParsing="false" onAction="#onClick" />
        <ProgressBar fx:id="progressIndicator" layoutX="298.0" layoutY="238.0" prefWidth="200.0" progress="0.0" />
-       <ListView fx:id="highScoreListView" layoutX="807.0" prefHeight="495.0" prefWidth="83.0" />
-      <Slider fx:id="volumeSlider" layoutX="863.0" layoutY="128.0" orientation="VERTICAL" />
+       <ListView fx:id="highScoreListView" layoutX="810.0" layoutY="-1.0" prefHeight="495.0" prefWidth="89.0" />
+      <Slider fx:id="volumeSlider" layoutX="796.0" layoutY="121.0" orientation="VERTICAL" prefHeight="184.0" prefWidth="14.0" />
    </children>
 </AnchorPane>

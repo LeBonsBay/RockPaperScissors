@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class HelloApplication extends Application {
         );
 
         stage.setTitle("Welcome to our funny Rock, Paper, Scissors Game!");
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
     }
