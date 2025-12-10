@@ -1,5 +1,6 @@
 package htl.steyr.rockpaperscissors;
 
+import javafx.animation.AnimationTimer;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -51,8 +52,13 @@ public class GameController implements Initializable {
     public Button wellButton;
     public Button midButton;
     public ImageView botDisplayView;
+    private MediaPlayer mediaPlayer;
+    private Media clickSound;
+    private Media bgMusic;
+    private Map<Node, Point2D> originalPositions = new HashMap<>();
 
     private final Image[] imgs = new Image[4];
+    public Slider volumeSlider;
 
     private String handSign;
 
@@ -63,9 +69,10 @@ public class GameController implements Initializable {
     public String getHandSign() {
         return handSign;
     }
-    public Button wellButton;
+
     public ProgressBar progressIndicator;
     public ListView<Integer> highScoreListView;
+
 
 
     //we only want one object of gameLogic and not constantly create a new one
@@ -77,6 +84,13 @@ public class GameController implements Initializable {
         midButton.setVisible(false);
         botDisplayView.setFocusTraversable(false);
 
+       gameLogic.setView(highScoreListView);
+
+        progressIndicator.setVisible(false);
+        for(Node n : root.getChildren()){
+            originalPositions.put(n, new Point2D(n.getLayoutX(), n.getLayoutY()));
+        }
+
         try {
             imgs[0] = new Image(getClass().getResourceAsStream("/images/rock.png"));
             imgs[1] = new Image(getClass().getResourceAsStream("/images/paper.png"));
@@ -87,15 +101,10 @@ public class GameController implements Initializable {
             e.printStackTrace();
         }
         //music at start of the program
-        //backGroundMusic();
+        backGroundMusic();
     }
 
-    public void backGroundMusic(){
-        //@ToDo
-        //implement button for stopping music and implement infinite-loop (as long as the program runs)
-        //sometimes the music stops while playing, idk yet why
-        //Note: TinySound library seems to be good
-    //setting bg music with slider
+    public void backGroundMusic() {
 
         String file = "bgMusic.mp3";
         String mp3File = "./src/main/resources/mp3/" + file;
@@ -103,10 +112,6 @@ public class GameController implements Initializable {
         bgMusic = new Media(new File(mp3File).toURI().toString());
 
         mediaPlayer = new MediaPlayer(bgMusic);
-        String mp3File = "./src/main/resources/mp3/bgMusic.mp3";
-        Media bgMusic = new Media(new File(mp3File).toURI().toString());
-
-        MediaPlayer mediaPlayer = new MediaPlayer(bgMusic);
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
         volumeSlider.setMin(0.0);
@@ -117,6 +122,7 @@ public class GameController implements Initializable {
 
         mediaPlayer.play();
     }
+
 
     //onClick Sound for the buttons
     public void clickSound() {
@@ -131,10 +137,10 @@ public class GameController implements Initializable {
 
         mediaPlayer.setVolume(0.5);
 
-        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
 
     }
+
 
 
     public void onClick(ActionEvent actionEvent) {
@@ -142,6 +148,7 @@ public class GameController implements Initializable {
 
         Button buttonSource = (Button) actionEvent.getSource();
         String chosenButton = buttonSource.getId();
+        System.out.println("Player chose: " + chosenButton); // <-- NEU HINZUFÜGEN
         transition(chosenButton);
         cpuWaitTime(progressIndicator);
         for (int i = 0; i < (root.getChildren().size()); i++) {
@@ -154,7 +161,7 @@ public class GameController implements Initializable {
         botDisplayView.setVisible(true);
         buttonSource.setOnMouseClicked(null);
 
-        String chosenButton = buttonSource.getId();
+        //chosenButton = buttonSource.getId();
         // {"Rock", "Paper", "Scissors"} are the values
 
 
@@ -195,7 +202,9 @@ public class GameController implements Initializable {
 
                 Platform.runLater(() -> {
                     gameLogic.gameStart();
+                    rollingImages(gameLogic.getBotChoice());
                 });
+
                 return null;
             }
         };
@@ -228,6 +237,7 @@ public class GameController implements Initializable {
         double deltaX = root.getChildren().get(5).getLayoutX() - x;
         double deltaY = root.getChildren().get(5).getLayoutY() - y;
 
+        tt.setRate(3);
         tt.setToX(deltaX);
         tt.setToY(deltaY);
         tt.setInterpolator(Interpolator.LINEAR);
