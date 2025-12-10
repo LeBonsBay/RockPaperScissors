@@ -237,6 +237,7 @@ public class GameController implements Initializable {
         double deltaX = root.getChildren().get(5).getLayoutX() - x;
         double deltaY = root.getChildren().get(5).getLayoutY() - y;
 
+        tt.setRate(3);
         tt.setToX(deltaX);
         tt.setToY(deltaY);
         tt.setInterpolator(Interpolator.LINEAR);
