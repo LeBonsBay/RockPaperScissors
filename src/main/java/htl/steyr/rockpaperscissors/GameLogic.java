@@ -12,6 +12,14 @@ public class GameLogic {
     private int highScore = 0;
     private ArrayList<Integer> arrayList = new ArrayList<Integer>();
 
+
+    private int botChoice;
+
+
+    public int getBotChoice() {
+        return botChoice;
+    }
+
     public ListView<Integer> getView() {
         return view;
     }
@@ -62,9 +70,9 @@ public class GameLogic {
     public void botLogic() {
         Random random = new Random();
         String[] hands = {"Rock", "Paper", "Scissors", "Well"};
-        botGesture = hands[random.nextInt(0, hands.length)];
-
-        setBotGesture(hands[random.nextInt(0, hands.length)]);
+        int rand = random.nextInt(0, hands.length);
+        botGesture = hands[rand];
+        botChoice = rand;
         System.out.println(botGesture);
         //System.out.println(botGesture);
     }
