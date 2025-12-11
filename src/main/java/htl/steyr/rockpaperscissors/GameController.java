@@ -46,15 +46,18 @@ import java.util.concurrent.TimeUnit;
 public class GameController implements Initializable {
 
     public AnchorPane root;
+
     public Button scissorsButton;
     public Button paperButton;
     public Button rockButton;
     public Button wellButton;
     public Button midButton;
+
     public ImageView botDisplayView;
     private MediaPlayer mediaPlayer;
     private Media clickSound;
     private Media bgMusic;
+
     private Map<Node, Point2D> originalPositions = new HashMap<>();
 
     private final Image[] imgs = new Image[4];
@@ -74,9 +77,8 @@ public class GameController implements Initializable {
     public ListView<Integer> highScoreListView;
 
 
-
     //we only want one object of gameLogic and not constantly create a new one
-    private GameLogic gameLogic = new GameLogic(null,null);
+    private GameLogic gameLogic = new GameLogic(null, null);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,10 +86,10 @@ public class GameController implements Initializable {
         midButton.setVisible(false);
         botDisplayView.setFocusTraversable(false);
 
-       gameLogic.setView(highScoreListView);
+        gameLogic.setView(highScoreListView);
 
         progressIndicator.setVisible(false);
-        for(Node n : root.getChildren()){
+        for (Node n : root.getChildren()) {
             originalPositions.put(n, new Point2D(n.getLayoutX(), n.getLayoutY()));
         }
 
@@ -96,7 +98,6 @@ public class GameController implements Initializable {
             imgs[1] = new Image(getClass().getResourceAsStream("/images/paper.png"));
             imgs[2] = new Image(getClass().getResourceAsStream("/images/scissors.png"));
             imgs[3] = new Image(getClass().getResourceAsStream("/images/well.jpg"));
-            //imgs[3] = new Image(getClass().getResourceAsStream("/images/well.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,6 +119,7 @@ public class GameController implements Initializable {
         volumeSlider.setMax(1.0);
 
         // listener for volumeSlider
+        //here the media value gets bound to the volumeSliders
         mediaPlayer.volumeProperty().bind(volumeSlider.valueProperty());
 
         mediaPlayer.play();
@@ -138,9 +140,7 @@ public class GameController implements Initializable {
         mediaPlayer.setVolume(0.5);
 
         mediaPlayer.play();
-
     }
-
 
 
     public void onClick(ActionEvent actionEvent) {
@@ -248,17 +248,17 @@ public class GameController implements Initializable {
 
         final long ONE_SECOND = 1_000_000_000L; // 1 second in nanoseconds
 
-        final long[] startTime = { -1 };
-        final long[] lastFrame = { 0 };
+        final long[] startTime = {-1};
+        final long[] lastFrame = {0};
 
         // SPEED PARAMETERS
         long startDelay = 20_000_000L;   // 20ms → very fast
-        long endDelay   = 250_000_000L;  // 250ms → slow at the end
+        long endDelay = 250_000_000L;  // 250ms → slow at the end
 
         final double slowdownSteps = 1.0 / imgs.length * 12.0;
         final double[] progress = {0};
 
-        final long[] currentDelay = { startDelay };
+        final long[] currentDelay = {startDelay};
 
         final int[] currentIndex = {0};
 
@@ -305,11 +305,11 @@ public class GameController implements Initializable {
         };
 
         timer.start();
-        System.out.println( "##" + botDecision);
+        System.out.println("##" + botDecision);
     }
 
-    public void reset(){
-        for(Node node : originalPositions.keySet()){
+    public void reset() {
+        for (Node node : originalPositions.keySet()) {
             Point2D point = originalPositions.get(node);
 
             node.setLayoutX(point.getX());
@@ -328,11 +328,9 @@ public class GameController implements Initializable {
         botDisplayView.setVisible(false);
     }
 
-    public void resetLater(double seconds){
+    public void resetLater(double seconds) {
         PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
         pause.setOnFinished(event -> reset());
         pause.play();
     }
-
 }
-
